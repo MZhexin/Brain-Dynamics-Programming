@@ -1,0 +1,5 @@
+BrainPy教学：
+1. BrainPy基于Google JAX框架和XLA编译器
+2. BrainPy为它的模块化编程范式提供了即时编译（Just-in-Time Compilation，JIT Compilation）
+3. 支持CPU、GPU、TPU
+特别注意：本教程的代码均运行在版本号大于等于2.2.0的BrainPy上
