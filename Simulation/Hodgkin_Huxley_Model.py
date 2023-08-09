@@ -15,7 +15,7 @@ class HH(bp.NeuGroup):
         super(HH, self).__init__(size=size)
 
         # 定义神经元参数
-        self.ENa = ENa                                              # Na离子的平衡电位（即平衡离子浓度差引起的离子定向移动所需的等效电位）
+        self.ENa = ENa                                              # Na离子的平衡电位
         self.EK = EK                                                # K离子的平衡电位
         self.EL = EL                                                # 泄露通道的平衡单位
         self.gNa = gNa                                              # Na离子通道的最大电导
@@ -32,7 +32,7 @@ class HH(bp.NeuGroup):
         self.m = bm.Variable(0.0266 * bm.ones(self.num))            # 离子通道门控变量m
         self.h = bm.Variable(0.772 * bm.ones(self.num))             # 离子通道门控变量h
         self.n = bm.Variable(0.235 * bm.ones(self.num))             # 离子通道门控变量n
-        self.input = bm.Variable(bm.zeros(self.num))                  # 神经元接收的外部输入电流
+        self.input = bm.Variable(bm.zeros(self.num))                # 神经元接收的外部输入电流
         self.spike = bm.Variable(bm.zeros(self.num, dtype=bool))    # 神经元发放状态
 
         # 神经元上次发放的时刻
@@ -114,12 +114,14 @@ runner1 = bp.DSRunner(hh1,
 runner1.run(length1)
 
 # 可视化
-bp.visualize.line_plot(runner1.mon.ts, runner1.mon.V, ylabel='Volatge(mV)', title='Response of HH Model With Different Input Current',
+bp.visualize.line_plot(runner1.mon.ts, runner1.mon.V, ylabel='Volatge(mV)',
+                       title='Response of HH Model With Different Input Current',
                        plot_ids=np.arange(currents1.shape[1]), )
 
 # 将外部输入电流的变化画在膜电位变化的下方
 plt.plot(runner1.mon.ts, bm.where(currents1[:, -1] > 0, 10., 0.).numpy() - 90)
 plt.tight_layout()
+plt.legend(['1mA', '2mA', '4mA', '8mA', '10mA', '15mA'])
 plt.show()
 
 
