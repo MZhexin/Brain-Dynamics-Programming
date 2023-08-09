@@ -1,0 +1,3 @@
+温馨提示：
+    如果在设置模拟环境的步骤报错“ERROR:bmtk.utils.sim_setup:  Was unable to compile mechanism in 地址”，
+    需要在命令行手动输入指令。因此，若遇到该情况，建议一个cell一个cell地运行程序，不建议使用RUN ALL一步到位。
