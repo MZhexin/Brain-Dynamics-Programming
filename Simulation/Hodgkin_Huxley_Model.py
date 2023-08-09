@@ -96,26 +96,48 @@ class HH(bp.NeuGroup):
         self.input[:] = 0.                                            #  重置神经元接收到的外部输入电流
 
 
+
+'''
+    实验1：探究HH模型对不同大小外部输入电流的响应
+'''
 # 利用brainpy.inputs.section_input()函数设置时长均为2ms，但大小不同的外部输入电流
-currents, length = bp.inputs.section_input(
+currents1, length1 = bp.inputs.section_input(
     values=[0., bm.asarray([1., 2., 4., 8., 10., 15.]), 0.],        # 不同的电流大小
     durations=[10, 2, 25],                                          # 持续时间
     return_length=True)
 
 # 实例化
-hh = HH(currents.shape[1])
-runner = bp.DSRunner(hh,
+hh1 = HH(currents1.shape[1])
+runner1 = bp.DSRunner(hh1,
                     monitors=['V', 'm', 'h', 'n'],
-                    inputs=['input', currents, 'iter'])
-runner.run(length)
+                    inputs=['input', currents1, 'iter'])
+runner1.run(length1)
 
 # 可视化
-bp.visualize.line_plot(runner.mon.ts, runner.mon.V, ylabel='Volatge(mV)',
-                       plot_ids=np.arange(currents.shape[1]), )
+bp.visualize.line_plot(runner1.mon.ts, runner1.mon.V, ylabel='Volatge(mV)', title='Response of HH Model With Different Input Current',
+                       plot_ids=np.arange(currents1.shape[1]), )
 
 # 将外部输入电流的变化画在膜电位变化的下方
-plt.plot(runner.mon.ts, bm.where(currents[:, -1] > 0, 10., 0.).numpy() - 90)
+plt.plot(runner1.mon.ts, bm.where(currents1[:, -1] > 0, 10., 0.).numpy() - 90)
 plt.tight_layout()
 plt.show()
 
 
+'''
+    实验2：探究HH模型对持续电流的周期性响应
+'''
+currents2, length2 = bp.inputs.section_input(
+    values=[0., 10., 0.],                                           # 电流大小
+    durations=[10, 50, 10],                                         # 持续时间
+    return_length=True)
+
+hh2 = HH(1)
+runner2 = bp.DSRunner(hh2,
+                    monitors=['V', 'm', 'h', 'n'],
+                    inputs=['input', currents2, 'iter'])
+runner2.run(length2)
+
+bp.visualize.line_plot(runner2.mon.ts, runner2.mon.V, ylabel='Volatge(mV)', title='Periodic Response of HH Model With Sustained Current')
+plt.plot(runner2.mon.ts, bm.where(currents2 > 0, 10., 0.).numpy() - 90)
+plt.tight_layout()
+plt.show()
